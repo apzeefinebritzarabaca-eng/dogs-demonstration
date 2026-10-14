@@ -1,38 +1,321 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Cuyos Dog Information</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Numbers and Math Object Elements in JavaScript</title>
+<style>
+  :root { --orange:#e99436; --ink:#20242b; --muted:#647084; --paper:#fffdf9; --blue:#245b85; --line:#e4e8ee; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; background:#e9edf2; color:var(--ink); }
+  .deck { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:22px; }
+  .slide { display:none; width:min(1120px, 96vw); min-height:min(650px, 88vh); background:var(--paper); border:1px solid #d8dde4; box-shadow:0 16px 42px #1d2a3a22; border-radius:12px; overflow:hidden; position:relative; padding:52px 64px 76px; }
+  .slide.active { display:block; animation:fade .22s ease-out; }
+  @keyframes fade { from { opacity:.65; transform:translateY(5px) } to { opacity:1; transform:translateY(0) } }
+  .ribbon { position:absolute; top:0; left:0; right:0; height:12px; background:var(--orange); }
+  .eyebrow { color:var(--blue); font-size:.82rem; text-transform:uppercase; letter-spacing:.14em; font-weight:700; margin:0 0 14px; }
+  h1 { font-size:clamp(2.2rem, 5vw, 4.4rem); line-height:1.05; margin:0 0 22px; letter-spacing:-.04em; }
+  h2 { font-size:clamp(1.8rem, 3vw, 2.7rem); margin:0 0 20px; letter-spacing:-.03em; }
+  h3 { margin:0 0 8px; font-size:1.05rem; }
+  p { font-size:1.08rem; line-height:1.65; color:#3c4654; }
+  .lead { font-size:1.25rem; max-width:760px; }
+  .tag { display:inline-block; padding:8px 12px; border-radius:999px; background:#fff0dc; color:#824a0b; font-weight:700; font-size:.9rem; }
+  .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:24px; }
+  .grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .panel { background:white; border:1px solid var(--line); border-radius:12px; padding:18px 20px; }
+  .panel p { font-size:.98rem; margin:7px 0 0; }
+  .prop { font-family:Consolas, Monaco, monospace; color:#155b87; font-weight:700; font-size:1rem; }
+  .value { color:#8b4e11; font-family:Consolas, Monaco, monospace; font-size:.95rem; }
+  ul { padding-left:23px; line-height:1.8; color:#3c4654; font-size:1.05rem; }
+  .code { background:#171d27; color:#e9f1fb; border-radius:12px; padding:20px; overflow:auto; font: .94rem/1.65 Consolas, Monaco, monospace; white-space:pre-wrap; }
+  .code .comment { color:#92a6bb; } .code .keyword { color:#f4bd70; } .code .string { color:#a8dca8; }
+  .demo { border:1px solid var(--line); border-radius:12px; background:white; overflow:hidden; }
+  .demo-head { padding:12px 16px; background:#f2f5f8; border-bottom:1px solid var(--line); font-weight:700; display:flex; align-items:center; gap:8px; }
+  .dot { width:9px; height:9px; border-radius:50%; background:#e99436; display:inline-block; }
+  .demo-body { padding:20px; }
+  label { display:block; font-size:.9rem; font-weight:700; margin:0 0 6px; color:#4a5564; }
+  input, select { width:100%; padding:11px 12px; border:1px solid #cdd5df; border-radius:8px; font-size:1rem; background:#fff; color:var(--ink); }
+  .controls { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  button { border:0; border-radius:8px; padding:11px 16px; background:var(--blue); color:white; font-size:.96rem; font-weight:700; cursor:pointer; }
+  button:hover { filter:brightness(1.08); }
+  button.secondary { background:#e8edf3; color:#26394c; }
+  .result { margin-top:14px; padding:14px; border-radius:8px; background:#f4f8fb; min-height:58px; font-family:Consolas, Monaco, monospace; line-height:1.6; overflow-wrap:anywhere; }
+  .nav { position:fixed; bottom:18px; left:0; right:0; display:flex; justify-content:center; align-items:center; gap:12px; z-index:5; }
+  .nav button { box-shadow:0 4px 12px #17233420; }
+  #counter { font-weight:700; color:#4b5665; min-width:65px; text-align:center; }
+  .footer { position:absolute; bottom:25px; left:64px; right:64px; display:flex; justify-content:space-between; color:#87909d; font-size:.82rem; border-top:1px solid var(--line); padding-top:12px; }
+  .callout { border-left:5px solid var(--orange); background:#fff5e8; padding:14px 18px; border-radius:0 10px 10px 0; color:#65431b; line-height:1.6; margin-top:20px; }
+  .big-number { font-size:2rem; font-weight:800; color:var(--blue); }
+  @media (max-width:700px) {
+    .deck { padding:8px; align-items:flex-start; }
+    .slide { padding:36px 22px 80px; min-height:84vh; }
+    .grid,.grid.three,.controls { grid-template-columns:1fr; }
+    .footer { left:22px; right:22px; }
+    p,ul { font-size:1rem; }
+    .nav { bottom:8px; }
+  }
+</style>
 </head>
-
 <body>
+<div class="deck">
+  <section class="slide active">
+    <div class="ribbon"></div>
+    <p class="eyebrow">JavaScript • Numbers and Math</p>
+    <h1>Numbers &amp; the<br><span style="color:var(--orange)">Math Object</span></h1>
+    <p class="lead">A visual introduction to JavaScript Math properties and methods, with a working interactive demo.</p>
+    <p><span class="tag">Presentation + live activity</span></p>
+    <div class="callout">Use the arrow buttons or your keyboard’s ← and → keys to move through the slides. Try the interactive examples along the way.</div>
+    <div class="footer"><span>Numbers and Math Object Elements in JavaScript</span><span>01</span></div>
+  </section>
 
-    <h1>🐶 Dog Information</h1>
+  <section class="slide">
+    <div class="ribbon"></div>
+    <p class="eyebrow">01 • Introduction</p>
+    <h2>What is the Math object?</h2>
+    <p class="lead">The JavaScript <span class="prop">Math</span> object is used to perform mathematical operations on numbers.</p>
+    <div class="grid">
+      <div class="panel"><h3>Math properties</h3><p>Provide useful mathematical constants, such as π and Euler’s number.</p></div>
+      <div class="panel"><h3>Math methods</h3><p>Perform calculations, such as rounding numbers, finding square roots, and choosing the highest or lowest value.</p></div>
+    </div>
+    <div class="callout"><strong>Remember:</strong> properties are values (for example, <code>Math.PI</code>); methods are actions you call with parentheses (for example, <code>Math.sqrt(25)</code>).</div>
+    <div class="footer"><span>JavaScript • Math Object</span><span>02</span></div>
+  </section>
 
-    <button onclick="showDogInfo()">Show Information</button>
+  <section class="slide">
+    <div class="ribbon"></div>
+    <p class="eyebrow">02 • Math properties</p>
+    <h2>Useful mathematical constants</h2>
+    <p>These built-in properties return commonly used mathematical values.</p>
+    <div class="grid three">
+      <div class="panel"><div class="prop">Math.PI</div><p>Pi</p><div class="value">≈ 3.14159</div></div>
+      <div class="panel"><div class="prop">Math.E</div><p>Euler’s number</p><div class="value">≈ 2.71828</div></div>
+      <div class="panel"><div class="prop">Math.SQRT2</div><p>Square root of 2</p><div class="value">≈ 1.41421</div></div>
+      <div class="panel"><div class="prop">Math.SQRT1_2</div><p>Square root of 1/2</p><div class="value">≈ 0.70711</div></div>
+      <div class="panel"><div class="prop">Math.LN2</div><p>Natural logarithm of 2</p><div class="value">≈ 0.69315</div></div>
+      <div class="panel"><div class="prop">Math.LN10</div><p>Natural logarithm of 10</p><div class="value">≈ 2.30259</div></div>
+      <div class="panel"><div class="prop">Math.LOG2E</div><p>Base-2 logarithm of E</p><div class="value">≈ 1.44270</div></div>
+      <div class="panel"><div class="prop">Math.LOG10E</div><p>Base-10 logarithm of E</p><div class="value">≈ 0.43429</div></div>
+    </div>
+    <div class="footer"><span>JavaScript • Math Object</span><span>03</span></div>
+  </section>
 
-    <p id="result"></p>
+  <section class="slide">
+    <div class="ribbon"></div>
+    <p class="eyebrow">03 • Math methods</p>
+    <h2>Methods you can use</h2>
+    <div class="grid">
+      <div class="panel"><div class="prop">Math.round(x)</div><p>Rounds x to the nearest integer.</p></div>
+      <div class="panel"><div class="prop">Math.ceil(x)</div><p>Rounds x up to the nearest integer.</p></div>
+      <div class="panel"><div class="prop">Math.floor(x)</div><p>Rounds x down to the nearest integer.</p></div>
+      <div class="panel"><div class="prop">Math.abs(x)</div><p>Returns the absolute value of x.</p></div>
+      <div class="panel"><div class="prop">Math.sqrt(x)</div><p>Returns the square root of x.</p></div>
+      <div class="panel"><div class="prop">Math.pow(x, y)</div><p>Returns x raised to the power y.</p></div>
+      <div class="panel"><div class="prop">Math.max(a, b, …)</div><p>Returns the highest value.</p></div>
+      <div class="panel"><div class="prop">Math.min(a, b, …)</div><p>Returns the lowest value.</p></div>
+      <div class="panel"><div class="prop">Math.random()</div><p>Returns a random number from 0 (inclusive) to 1 (exclusive).</p></div>
+      <div class="panel"><div class="prop">Math.sin(x), cos(x), tan(x)</div><p>Trigonometric functions; angles are in radians.</p></div>
+      <div class="panel"><div class="prop">Math.log(x)</div><p>Returns the natural logarithm of x.</p></div>
+      <div class="panel"><div class="prop">Math.exp(x)</div><p>Returns E raised to the power x.</p></div>
+    </div>
+    <div class="footer"><span>JavaScript • Math Object</span><span>04</span></div>
+  </section>
 
-    <script>
-        function showDogInfo() {
+  <section class="slide">
+    <div class="ribbon"></div>
+    <p class="eyebrow">04 • Example 1</p>
+    <h2>Display Math property values</h2>
+    <p>This example uses Math object properties and displays their values on the page.</p>
+    <div class="grid">
+      <div>
+        <div class="code"><span class="keyword">const</span> message =
+  <span class="string">"Math.PI: "</span> + Math.PI + <span class="string">"&lt;br&gt;"</span> +
+  <span class="string">"Math.E: "</span> + Math.E;
 
-            // Dog information
-            let dogName = "Cuyos";
-            let dogAge = 4;
+document.getElementById(<span class="string">"result"</span>)
+  .innerHTML = message;</div>
+        <p style="font-size:.9rem">The <code>innerHTML</code> property places the generated text inside an HTML element.</p>
+      </div>
+      <div class="demo">
+        <div class="demo-head"><span class="dot"></span> Output preview</div>
+        <div class="demo-body"><h3>Math Object Properties</h3><div id="propertyOutput" class="result"></div><button onclick="showProperties()">Run example</button></div>
+      </div>
+    </div>
+    <div class="footer"><span>JavaScript • Math Object</span><span>05</span></div>
+  </section>
 
-            // Calculate human age
-            let humanYears = dogAge * 7;
+  <section class="slide">
+    <div class="ribbon"></div>
+    <p class="eyebrow">05 • Interactive activity</p>
+    <h2>Try a Math method</h2>
+    <p>Choose a method, enter a number, then run the JavaScript calculation.</p>
+    <div class="grid">
+      <div class="demo">
+        <div class="demo-head"><span class="dot"></span> JavaScript playground</div>
+        <div class="demo-body">
+          <div class="controls">
+            <div><label for="method">Math method</label><select id="method"><option value="round">Math.round(x)</option><option value="ceil">Math.ceil(x)</option><option value="floor">Math.floor(x)</option><option value="abs">Math.abs(x)</option><option value="sqrt">Math.sqrt(x)</option><option value="square">Math.pow(x, 2)</option></select></div>
+            <div><label for="number">Number (x)</label><input id="number" type="number" value="4.6" step="any"></div>
+          </div>
+          <button onclick="calculate()">Run JavaScript</button>
+          <div id="calcResult" class="result" aria-live="polite">Your result will appear here.</div>
+        </div>
+      </div>
+      <div>
+        <h3>What the code does</h3>
+        <div class="code"><span class="keyword">const</span> x = 4.6;
+<span class="keyword">const</span> answer = Math.round(x);
+console.log(answer); <span class="comment">// 5</span></div>
+        <p>Change the input and select a different method to see how the output changes.</p>
+        <div class="callout">Tip: <code>Math.sqrt(x)</code> expects a non-negative number for a real-number result.</div>
+      </div>
+    </div>
+    <div class="footer"><span>JavaScript • Math Object</span><span>06</span></div>
+  </section>
 
-            // Choose a random toy from 1 to 3
-            let randomToy = Math.floor(Math.random() * 3) + 1;
+  <section class="slide">
+    <div class="ribbon"></div>
+    <p class="eyebrow">06 • More practice</p>
+    <h2>Explore other methods</h2>
+    <div class="grid">
+      <div class="demo">
+        <div class="demo-head"><span class="dot"></span> Compare values</div>
+        <div class="demo-body">
+          <div class="controls">
+            <div><label for="first">First number</label><input id="first" type="number" value="12" step="any"></div>
+            <div><label for="second">Second number</label><input id="second" type="number" value="7" step="any"></div>
+          </div>
+          <button onclick="compareValues()">Find max and min</button>
+          <div id="compareResult" class="result">Results will appear here.</div>
+          <button class="secondary" style="margin-top:10px" onclick="randomNumber()">Generate random number</button>
+          <div id="randomResult" class="result">Random number: —</div>
+        </div>
+      </div>
+      <div>
+        <h3>Example code</h3>
+        <div class="code"><span class="keyword">const</span> a = 12;
+<span class="keyword">const</span> b = 7;
 
-            // Display the information
-            document.getElementById("result").innerHTML =
-                "🐕 Dog's Name: " + dogName + "<br>" +
-                "🎂 Dog's Age: " + dogAge + " years old<br>" +
-                "📅 Human Age: " + humanYears + " years old<br>" +
-                "🎾 Random Toy: Toy #" + randomToy;
-        }
-    </script>
+Math.max(a, b); <span class="comment">// 12</span>
+Math.min(a, b); <span class="comment">// 7</span>
+Math.random();  <span class="comment">// 0 to less than 1</span></div>
+        <p>Try different values. The maximum is the larger number, while the minimum is the smaller number.</p>
+      </div>
+    </div>
+    <div class="footer"><span>JavaScript • Math Object</span><span>07</span></div>
+  </section>
 
+  <section class="slide">
+    <div class="ribbon"></div>
+    <p class="eyebrow">07 • Review</p>
+    <h2>Quick knowledge check</h2>
+    <div class="panel" style="margin-bottom:14px">
+      <h3>1. Which property represents pi?</h3>
+      <label><input type="radio" name="q1" value="a" style="width:auto"> Math.E</label>
+      <label><input type="radio" name="q1" value="b" style="width:auto"> Math.PI</label>
+      <label><input type="radio" name="q1" value="c" style="width:auto"> Math.SQRT2</label>
+    </div>
+    <div class="panel" style="margin-bottom:14px">
+      <h3>2. Which method rounds a number down?</h3>
+      <label><input type="radio" name="q2" value="a" style="width:auto"> Math.ceil()</label>
+      <label><input type="radio" name="q2" value="b" style="width:auto"> Math.round()</label>
+      <label><input type="radio" name="q2" value="c" style="width:auto"> Math.floor()</label>
+    </div>
+    <div class="panel">
+      <h3>3. What does Math.sqrt(25) return?</h3>
+      <label><input type="radio" name="q3" value="a" style="width:auto"> 5</label>
+      <label><input type="radio" name="q3" value="b" style="width:auto"> 25</label>
+      <label><input type="radio" name="q3" value="c" style="width:auto"> 625</label>
+    </div>
+    <button onclick="checkQuiz()" style="margin-top:16px">Check answers</button>
+    <div id="quizResult" class="result" aria-live="polite">Choose an answer for each question.</div>
+    <div class="footer"><span>JavaScript • Math Object</span><span>08</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="ribbon"></div>
+    <p class="eyebrow">08 • Summary</p>
+    <h2>Key takeaways</h2>
+    <ul>
+      <li>The <strong>Math object</strong> helps JavaScript perform mathematical operations.</li>
+      <li><strong>Properties</strong> provide constants such as <code>Math.PI</code> and <code>Math.E</code>.</li>
+      <li><strong>Methods</strong> perform calculations such as rounding, finding square roots, and comparing values.</li>
+      <li>Interactive examples make it easier to see how changing an input changes the output.</li>
+    </ul>
+    <div class="callout"><strong>Challenge:</strong> Change the input in the playground and explain in your own words why the result changes.</div>
+    <p style="font-size:.88rem;color:#778190">Based on the provided learning material, “Numbers and Math Object Elements in JavaScript,” including its listed properties, methods, and examples.</p>
+    <div class="footer"><span>Thank you!</span><span>09</span></div>
+  </section>
+</div>
+
+<div class="nav">
+  <button class="secondary" onclick="move(-1)" aria-label="Previous slide">← Previous</button>
+  <span id="counter">1 / 9</span>
+  <button onclick="move(1)" aria-label="Next slide">Next →</button>
+</div>
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let current = 0;
+  function showSlide(index) {
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+    document.getElementById('counter').textContent = `${current + 1} / ${slides.length}`;
+  }
+  function move(step) { showSlide(current + step); }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') move(1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') move(-1);
+  });
+  function showProperties() {
+    document.getElementById('propertyOutput').innerHTML =
+      'Math.PI: ' + Math.PI.toFixed(5) + '<br>' +
+      'Math.E: ' + Math.E.toFixed(5) + '<br>' +
+      'Math.SQRT2: ' + Math.SQRT2.toFixed(5) + '<br>' +
+      'Math.LN2: ' + Math.LN2.toFixed(5);
+  }
+  function calculate() {
+    const x = Number(document.getElementById('number').value);
+    const method = document.getElementById('method').value;
+    let answer;
+    if (document.getElementById('number').value.trim() === '') {
+      document.getElementById('calcResult').textContent = 'Please enter a number.';
+      return;
+    }
+    switch (method) {
+      case 'round': answer = Math.round(x); break;
+      case 'ceil': answer = Math.ceil(x); break;
+      case 'floor': answer = Math.floor(x); break;
+      case 'abs': answer = Math.abs(x); break;
+      case 'sqrt': answer = x < 0 ? 'No real-number result for a negative input' : Math.sqrt(x); break;
+      case 'square': answer = Math.pow(x, 2); break;
+    }
+    document.getElementById('calcResult').textContent = 'Math.' +
+      (method === 'square' ? 'pow(x, 2)' : method + '(x)') + ' = ' + answer;
+  }
+  function compareValues() {
+    const a = Number(document.getElementById('first').value);
+    const b = Number(document.getElementById('second').value);
+    document.getElementById('compareResult').textContent =
+      'Math.max(a, b) = ' + Math.max(a, b) + '\\n' +
+      'Math.min(a, b) = ' + Math.min(a, b);
+    document.getElementById('compareResult').style.whiteSpace = 'pre-line';
+  }
+  function randomNumber() {
+    document.getElementById('randomResult').textContent = 'Math.random() = ' + Math.random();
+  }
+  function checkQuiz() {
+    const answers = {q1:'b', q2:'c', q3:'a'};
+    let score = 0;
+    let unanswered = 0;
+    for (const [name, correct] of Object.entries(answers)) {
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      if (!selected) unanswered++;
+      else if (selected.value === correct) score++;
+    }
+    const out = document.getElementById('quizResult');
+    out.textContent = unanswered ? `You got ${score}/3 correct. Answer all three questions to finish.` :
+      `You got ${score}/3 correct.` + (score === 3 ? ' Excellent work!' : ' Review the slides and try again.');
+  }
+  showProperties();
+</script>
 </body>
 </html>
